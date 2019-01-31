@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+
+<script language="javascript" type="text/javascript">
+
+    var ws = new WebSocket('ws://' + location.host + '/ws');
+    
+    if(!window.console) {window.console = {log: function() {} } };
+
+    ws.onmessage = function(ev)
+    {
+        var div = document.createElement('div');
+        div.innerHTML = ev.data;
+        document.getElementById('messages').appendChild(div);
+    };
+
+    window.onload = function()
+    {
+        document.getElementById('send_button').onclick = function(ev)
+        {
+            var msg = document.getElementById('send_input').value;
+            document.getElementById('send_input').value = '';
+            ws.send(msg);
+        };
+
+        document.getElementById('send_input').onkeypress = function(ev)
+        {
+            if(ev.keyCode == 13 || ev.which == 13)
+                document.getElementById('send_button').click();
+        };
+    };
+
+</script>
+
+<html>
+<body>
+
+    <h1>Hello; I'm testing websockets here!</h1>
+    <p>this is a paragraph</p>
+
+    <div id="messages">
+    </div>
+
+    <p>
+        <input type="text" id="send_input" />
+        <button id="send_button">Send Message</button>
+    </p>
+
+</body>
+</html>

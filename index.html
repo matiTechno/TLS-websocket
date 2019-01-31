@@ -4,8 +4,6 @@
 
     var ws = new WebSocket('ws://' + location.host + '/ws');
     
-    if(!window.console) {window.console = {log: function() {} } };
-
     ws.onmessage = function(ev)
     {
         var div = document.createElement('div');

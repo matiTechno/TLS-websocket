@@ -15,6 +15,8 @@ static void ev_handler(mg_connection* nc, int ev, void* ev_data)
     }
     case MG_EV_WEBSOCKET_HANDSHAKE_DONE:
     {
+        const char* buf = "welcome";
+        mg_send_websocket_frame(nc, WEBSOCKET_OP_TEXT, buf, strlen(buf));
         break;
     }
     case MG_EV_WEBSOCKET_FRAME:
@@ -41,12 +43,24 @@ int main()
     mg_mgr mgr;
     mg_mgr_init(&mgr, nullptr);
 
-    mg_connection* conn = mg_bind(&mgr, "1234", ev_handler);
+    const char* err;
+    mg_bind_opts bind_opts = {};
+    bind_opts.ssl_key = "server.key";
+    bind_opts.ssl_cert = "server.crt";
+    bind_opts.error_string = &err;
 
-    mg_set_protocol_http_websocket(conn);
+    mg_connection* conn = mg_bind_opt(&mgr, "1234", ev_handler, bind_opts);
+
+    if(conn == nullptr)
+    {
+        printf("mg_bind_opt failed: %s\n", err);
+        return 1;
+    }
 
     http_opts.document_root = ".";
     http_opts.enable_directory_listing = "yes";
+
+    mg_set_protocol_http_websocket(conn);
 
     for(;;)
     {

@@ -45,8 +45,8 @@ int main()
 
     const char* err;
     mg_bind_opts bind_opts = {};
-    bind_opts.ssl_key = "server.key";
-    bind_opts.ssl_cert = "server.crt";
+    bind_opts.ssl_key = "server-crypt/server.key";
+    bind_opts.ssl_cert = "server-crypt/server.crt";
     bind_opts.error_string = &err;
 
     mg_connection* conn = mg_bind_opt(&mgr, "1234", ev_handler, bind_opts);

@@ -22,7 +22,7 @@ static void ev_handler(mg_connection* nc, int ev, void* ev_data)
     case MG_EV_WEBSOCKET_FRAME:
     {
         websocket_message* wm = (websocket_message*)ev_data;
-        printf("received msg: %.*s\n", wm->size, wm->data);
+        printf("received msg: %.*s\n", int(wm->size), wm->data);
         static int count = 0;
         ++count;
         char buf[256];
